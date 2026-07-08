@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InternCircle | Certificate Verification Portal</title>
+  <meta name="description" content="Verify InternCircle student certificates online. Enter the Certificate ID to check credentials, internship domains, and performance records." />
+  <link rel="icon" type="image/png" href="Fav Icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&family=Great+Vibes&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .verify-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-sec);
+    }
+    .verify-main {
+      flex: 1;
+      padding: 60px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .verify-card {
+      width: 100%;
+      max-width: 500px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 40px;
+      box-shadow: var(--shadow-md);
+      text-align: center;
+    }
+    .verify-icon {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+    .verify-title {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--blue-dark);
+      margin-bottom: 10px;
+    }
+    .verify-desc {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: 30px;
+    }
+    .verify-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      text-align: left;
+    }
+    .verify-results {
+      margin-top: 30px;
+      display: none;
+      text-align: left;
+      padding: 20px;
+      background: rgba(26, 86, 232, 0.03);
+      border: 1px solid rgba(26, 86, 232, 0.1);
+      border-radius: var(--radius-md);
+    }
+    .result-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed var(--border);
+    }
+    .status-badge {
+      background: #10b981;
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 99px;
+      text-transform: uppercase;
+    }
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+    }
+    .result-label {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .result-value {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    /* ── MOCK CERTIFICATE CONTAINER ── */
+    .certificate-section {
+      width: 100%;
+      max-width: 900px;
+      margin: 40px auto 0 auto;
+      display: none;
+      animation: fadeIn 0.6s ease;
+    }
+    .certificate-frame {
+      background: #ffffff;
+      border: 16px solid var(--blue-dark);
+      padding: 40px;
+      position: relative;
+      box-shadow: var(--shadow-lg);
+      border-image: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-light) 50%, var(--blue-dark) 100%) 16;
+      background-image: radial-gradient(circle, rgba(26, 86, 232, 0.02) 1px, transparent 1px);
+      background-size: 20px 20px;
+      text-align: center;
+    }
+    .cert-inner-border {
+      border: 2px solid var(--accent);
+      padding: 30px;
+      height: 100%;
+      position: relative;
+    }
+    .cert-logo {
+      height: 55px;
+      margin-bottom: 15px;
+      mix-blend-mode: multiply;
+    }
+    .cert-title {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--blue-dark);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .cert-sub {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-bottom: 30px;
+    }
+    .cert-present {
+      font-style: italic;
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      margin-bottom: 15px;
+    }
+    .cert-name {
+      font-family: 'Great Vibes', cursive;
+      font-size: 3.5rem;
+      color: var(--blue-primary);
+      margin: 15px 0;
+    }
+    .cert-text {
+      max-width: 650px;
+      margin: 0 auto 35px auto;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+    .cert-text strong {
+      color: var(--text-main);
+    }
+    .cert-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 40px;
+      padding: 0 40px;
+    }
+    .cert-sign-block {
+      text-align: center;
+      width: 180px;
+    }
+    .cert-signature {
+      font-family: 'Great Vibes', cursive;
+      font-size: 1.8rem;
+      color: #334155;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 5px;
+      margin-bottom: 8px;
+    }
+    .cert-sign-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .cert-qr-block {
+      text-align: center;
+    }
+    .cert-qr {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 8px;
+      border: 1px solid var(--border);
+      padding: 4px;
+      background: #ffffff;
+    }
+    .cert-id {
+      font-size: 0.75rem;
+      font-family: monospace;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .cert-seal {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 80px;
+      opacity: 0.95;
+    }
+
+    .sample-btn-wrap {
+      margin-top: 20px;
+    }
+    .btn-sample {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: none;
+      border: none;
+      color: var(--blue-primary);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: underline;
+      transition: var(--transition);
+    }
+    .btn-sample:hover {
+      color: var(--blue-dark);
+    }
+
+    @media (max-width: 768px) {
+      .cert-name { font-size: 2.5rem; }
+      .cert-title { font-size: 1.6rem; }
+      .cert-footer { flex-direction: column; align-items: center; gap: 30px; }
+      .cert-sign-block { width: 100%; }
+    }
+  </style>
+</head>
+<body class="verify-page">
+
+  <!-- ── NAVBAR ── -->
+  <nav class="register-nav">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <img src="Logo.png" alt="InternCircle Logo" class="logo-img" />
+      </a>
+      <a href="index.html" class="btn-back">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="transform: rotate(180deg);"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Back to Home
+      </a>
+    </div>
+  </nav>
+
+  <!-- ── VERIFICATION MAIN SECTION ── -->
+  <main class="verify-main">
+    <div class="container" style="display: flex; flex-direction: column; align-items: center;">
+      
+      <!-- Verification Form Box -->
+      <div class="verify-card">
+        <div class="verify-icon">🔍</div>
+        <h2 class="verify-title">Verify Credentials</h2>
+        <p class="verify-desc">Enter the unique Certificate ID to verify student authenticity and details.</p>
+        
+        <form class="verify-form" id="verifyForm">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="certId">Certificate ID <span class="req">*</span></label>
+            <input type="text" id="certId" placeholder="e.g. IC-2026-8973" required style="text-transform: uppercase;" />
+            <span class="form-error" id="certIdError"></span>
+          </div>
+          <button type="submit" class="btn-submit" id="verifyBtn">
+            <span class="btn-text">Verify Student Credentials</span>
+            <span class="btn-loader" style="display:none">Searching Database…</span>
+          </button>
+        </form>
+
+        <!-- Search Results Detail -->
+        <div class="verify-results" id="verifyResults">
+          <div class="result-header">
+            <span style="font-weight: 700; color: var(--blue-dark);">Verification Status</span>
+            <span class="status-badge">Verified ✓</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Intern Name:</span>
+            <span class="result-value" id="resName">Rahul Sharma</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Domain:</span>
+            <span class="result-value" id="resDomain">Web Development</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Duration:</span>
+            <span class="result-value">4 Weeks (June - July 2026)</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Grade:</span>
+            <span class="result-value" style="color: #10b981;">A+ Excellent</span>
+          </div>
+        </div>
+
+        <div class="sample-btn-wrap">
+          <button class="btn-sample" id="viewSampleBtn">
+            📝 View Sample Certificate template
+          </button>
+        </div>
+      </div>
+
+      <!-- Certificate Preview Container -->
+      <div class="certificate-section" id="certSection">
+        <div class="certificate-frame">
+          <div class="cert-inner-border">
+            <!-- Watermark -->
+            <div class="cert-watermark">SAMPLE</div>
+            <div class="cert-msme-num">Reg No: UDYAM-MH-12-0048291</div>
+            
+            <!-- Logo inside certificate -->
+            <img src="Logo.png" alt="InternCircle" class="cert-logo" />
+            
+            <!-- Standard Ribbon Seal SVG -->
+            <svg class="cert-seal" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M50 0 L60 20 L80 15 L70 35 L90 45 L70 55 L80 75 L60 70 L50 90 L40 70 L20 75 L30 55 L10 45 L30 35 L20 15 L40 20 Z" fill="#b91c1c" />
+              <path d="M50 5 L58 22 L76 18 L68 35 L84 45 L68 55 L76 72 L58 68 L50 85 L42 68 L24 72 L32 55 L16 45 L32 35 L24 18 L42 22 Z" fill="#f87171" />
+              <circle cx="50" cy="45" r="28" fill="#1e3a8a" />
+              <circle cx="50" cy="45" r="24" fill="#fbbf24" />
+              <circle cx="50" cy="45" r="22" fill="#1e3a8a" />
+              <path d="M40 45 L47 52 L60 38" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+
+            <h1 class="cert-title">Certificate of Completion</h1>
+            <p class="cert-sub">This is proudly presented to</p>
+            
+            <h2 class="cert-name" id="certStudentName">Rahul Sharma</h2>
+            
+            <p class="cert-text">
+              for successfully completing their virtual, project-based internship program in 
+              <strong id="certDomainName">Web Development</strong> at <strong>InternCircle</strong>. 
+              The student demonstrated exemplary skills, dedication, and professional ethics during the course of the program.
+            </p>
+            
+            <div class="cert-footer">
+              <!-- Verification QR & ID -->
+              <div class="cert-qr-block">
+                <!-- Inline Mock QR Code SVG -->
+                <svg class="cert-qr" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Outer frame -->
+                  <rect x="0" y="0" width="100" height="100" fill="white"/>
+                  <!-- Position Markers (Top Left, Top Right, Bottom Left) -->
+                  <rect x="10" y="10" width="25" height="25" fill="#0f2d6b"/>
+                  <rect x="15" y="15" width="15" height="15" fill="white"/>
+                  <rect x="18" y="18" width="9" height="9" fill="#0f2d6b"/>
+                  
+                  <rect x="65" y="10" width="25" height="25" fill="#0f2d6b"/>
+                  <rect x="70" y="15" width="15" height="15" fill="white"/>
+                  <rect x="73" y="18" width="9" height="9" fill="#0f2d6b"/>
+                  
+                  <rect x="10" y="65" width="25" height="25" fill="#0f2d6b"/>
+                  <rect x="15" y="70" width="15" height="15" fill="white"/>
+                  <rect x="18" y="73" width="9" height="9" fill="#0f2d6b"/>
+                  
+                  <!-- Random QR Pixel Blocks -->
+                  <rect x="42" y="10" width="8" height="8" fill="#0f2d6b"/>
+                  <rect x="52" y="18" width="8" height="8" fill="#0f2d6b"/>
+                  <rect x="42" y="28" width="12" height="6" fill="#0f2d6b"/>
+                  <rect x="10" y="42" width="8" height="8" fill="#0f2d6b"/>
+                  <rect x="22" y="48" width="10" height="10" fill="#0f2d6b"/>
+                  <rect x="42" y="42" width="16" height="16" fill="#0f2d6b"/>
+                  <rect x="65" y="42" width="8" height="12" fill="#0f2d6b"/>
+                  <rect x="80" y="48" width="10" height="6" fill="#0f2d6b"/>
+                  <rect x="48" y="65" width="12" height="12" fill="#0f2d6b"/>
+                  <rect x="70" y="65" width="20" height="8" fill="#0f2d6b"/>
+                  <rect x="65" y="80" width="12" height="10" fill="#0f2d6b"/>
+                  <rect x="82" y="82" width="8" height="8" fill="#0f2d6b"/>
+                </svg>
+                <div class="cert-id" id="certCodeDisplay">IC-2026-8973</div>
+              </div>
+
+              <div class="cert-sign-block" style="text-align: center; width: 200px;">
+                <div style="border-bottom: 1px solid var(--border); width: 200px; margin: 0 auto 8px auto; height: 25px;"></div>
+                <div style="font-weight: 700; font-size: 1.15rem; color: var(--text-main); font-family: var(--font-body);">Hariharan</div>
+                <div class="cert-sign-title">Founder & CEO</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom" style="border-top: none; padding-top: 0; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+        <div style="font-size: 0.85rem; display: flex; gap: 20px; justify-content: center; margin-bottom: 5px;">
+          <a href="terms.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">Terms & Conditions</a>
+          <span style="color: var(--border);">|</span>
+          <a href="privacy.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">Privacy Policy</a>
+        </div>
+        <p>© 2024 InternCircle. All rights reserved. | Online Internships Across India</p>
+        <p class="footer-tagline">Learn · Grow · Succeed</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const verifyForm = document.getElementById('verifyForm');
+    const verifyBtn = document.getElementById('verifyBtn');
+    const btnText = verifyBtn.querySelector('.btn-text');
+    const btnLoader = verifyBtn.querySelector('.btn-loader');
+    const verifyResults = document.getElementById('verifyResults');
+    const certSection = document.getElementById('certSection');
+    const viewSampleBtn = document.getElementById('viewSampleBtn');
+
+    // Sample data mapping for verification demo
+    const database = {
+      'IC-2026-8973': { name: 'Rahul Sharma', domain: 'Web Development' },
+      'IC-2026-1045': { name: 'Anjali Gupta', domain: 'UI/UX Design' },
+      'IC-2026-4731': { name: 'Amit Verma', domain: 'Data Analytics' },
+      'IC-2026-9284': { name: 'Priya Iyer', domain: 'Digital Marketing' }
+    };
+
+    verifyForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const rawInput = document.getElementById('certId').value.trim();
+      const cleanInput = rawInput.toUpperCase();
+      const errorSpan = document.getElementById('certIdError');
+
+      // Reset
+      errorSpan.textContent = '';
+      verifyResults.style.display = 'none';
+      certSection.style.display = 'none';
+
+      // Simulation loader
+      btnText.style.display = 'none';
+      btnLoader.style.display = 'block';
+      verifyBtn.disabled = true;
+
+      setTimeout(() => {
+        btnText.style.display = 'block';
+        btnLoader.style.display = 'none';
+        verifyBtn.disabled = false;
+
+        if (database[cleanInput]) {
+          const match = database[cleanInput];
+          
+          // Populate details
+          document.getElementById('resName').textContent = match.name;
+          document.getElementById('resDomain').textContent = match.domain;
+          document.getElementById('certStudentName').textContent = match.name;
+          document.getElementById('certDomainName').textContent = match.domain;
+          document.getElementById('certCodeDisplay').textContent = cleanInput;
+
+          // Render
+          verifyResults.style.display = 'block';
+          certSection.style.display = 'block';
+          certSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          errorSpan.textContent = 'Invalid ID. Try: IC-2026-8973, IC-2026-1045, or IC-2026-4731';
+        }
+      }, 1200);
+    });
+
+    viewSampleBtn.addEventListener('click', function() {
+      // Default to Rahul Sharma
+      document.getElementById('resName').textContent = 'Rahul Sharma';
+      document.getElementById('resDomain').textContent = 'Web Development';
+      document.getElementById('certStudentName').textContent = 'Rahul Sharma';
+      document.getElementById('certDomainName').textContent = 'Web Development';
+      document.getElementById('certCodeDisplay').textContent = 'IC-2026-8973';
+
+      verifyResults.style.display = 'block';
+      certSection.style.display = 'block';
+      certSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  </script>
+</body>
+</html>
