@@ -1,0 +1,207 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<title>Student Login - InternCircle</title>
+<meta name="description" content="Login to your InternCircle student dashboard."/>
+<meta name="robots" content="index, follow"/>
+<link rel="icon" type="image/png" href="Fav Icon.png"/>
+<link rel="apple-touch-icon" href="Fav Icon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bd:#0a1628;--bn:#0d2347;--bp:#1b5fe8;--bb:#2d7ff9;--bl:#4fa3ff;
+  --gd:#f59e0b;--wh:#fff;--tm:#0f172a;--ts:#1e293b;--mu:#64748b;
+  --bgl:#f0f6ff;--rd:8px;--rm:14px;--rl:22px;--rx:32px;
+  --sm:0 2px 16px rgba(27,95,232,.08);--slg:0 24px 64px rgba(27,95,232,.18);
+  --tr:0.38s cubic-bezier(0.4,0,0.2,1)
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bgl);color:var(--tm);overflow-x:hidden;min-height:100vh;display:flex;flex-direction:column}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:#f0f6ff}::-webkit-scrollbar-thumb{background:var(--bp);border-radius:10px}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 28px;border-radius:50px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.95rem;cursor:pointer;border:none;text-decoration:none;transition:var(--tr);white-space:nowrap}
+.btn-p{background:linear-gradient(135deg,var(--bp),var(--bb));color:#fff;box-shadow:0 4px 20px rgba(27,95,232,.35)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(27,95,232,.5)}
+.btn-full{width:100%}
+
+/* NAVBAR */
+.navbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:#fff;box-shadow:0 1px 0 #e8f0ff,0 4px 24px rgba(27,95,232,.05);transition:var(--tr)}
+.navi{display:flex;align-items:center;justify-content:space-between;padding:16px 40px;max-width:1300px;margin:0 auto}
+.navi .logo img{height:48px;width:auto}
+.nlinks{display:flex;list-style:none;gap:32px}
+.nlinks a{color:var(--ts);text-decoration:none;font-weight:600;font-size:.9rem;transition:var(--tr);position:relative;padding-bottom:2px}
+.nlinks a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:2px;background:var(--bp);border-radius:2px;transition:width var(--tr)}
+.nlinks a:hover{color:var(--bp)}
+.nlinks a:hover::after{width:100%}
+.hbg{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:6px}
+.hbg span{display:block;width:22px;height:2px;background:var(--tm);border-radius:2px}
+
+/* SPLIT LAYOUT */
+.split{display:flex;flex:1;min-height:100vh;padding-top:80px}
+.s-left{flex:1;background:linear-gradient(145deg,var(--bd) 0%,var(--bn) 100%);position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;color:#fff}
+.s-right{flex:1;display:flex;align-items:center;justify-content:center;padding:40px;background:#fff;position:relative}
+
+/* LEFT SIDE VISUALS */
+.s-left::before{content:'';position:absolute;top:-20%;left:-20%;width:140%;height:140%;background:radial-gradient(circle,rgba(27,95,232,.15) 0%,transparent 60%);animation:pulse 8s ease-in-out infinite alternate}
+@keyframes pulse{from{transform:scale(1)}to{transform:scale(1.1)}}
+.l-content{position:relative;z-index:2;text-align:center;max-width:480px}
+.l-content img{height:80px;margin-bottom:32px}
+.l-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:2.8rem;font-weight:900;line-height:1.2;margin-bottom:16px}
+.l-title span{background:linear-gradient(135deg,var(--bl),#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.l-desc{font-size:1.1rem;color:rgba(255,255,255,.7);line-height:1.6;margin-bottom:40px}
+
+/* APP INSTALL BANNER */
+.app-banner{background:rgba(255,255,255,.08);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:24px;display:flex;align-items:center;gap:20px;text-align:left;box-shadow:0 20px 40px rgba(0,0,0,.2);transition:var(--tr);cursor:pointer}
+.app-banner:hover{background:rgba(255,255,255,.12);transform:translateY(-4px);border-color:rgba(255,255,255,.25)}
+.app-icon{width:56px;height:56px;background:linear-gradient(135deg,var(--bp),var(--bb));border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:#fff;flex-shrink:0;box-shadow:0 10px 20px rgba(27,95,232,.3)}
+.app-txt h4{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.1rem;margin-bottom:4px}
+.app-txt p{font-size:.85rem;color:rgba(255,255,255,.6)}
+.app-btn{background:#fff;color:var(--bd);font-size:.85rem;padding:8px 16px;border-radius:50px;font-weight:700;margin-left:auto;white-space:nowrap}
+
+/* LOGIN FORM */
+.log-box{width:100%;max-width:440px;position:relative;z-index:2}
+.log-box h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:2.2rem;font-weight:800;color:var(--tm);margin-bottom:8px}
+.log-box p{color:var(--mu);margin-bottom:32px;font-size:1.05rem}
+
+.fg{margin-bottom:20px}
+.flbl{display:block;font-size:.85rem;font-weight:700;color:var(--ts);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em}
+.fi{width:100%;padding:14px 18px;border:2px solid #e2e8f0;border-radius:12px;font-family:'Inter',sans-serif;font-size:1rem;color:var(--tm);background:#f8fafc;transition:var(--tr);outline:none}
+.fi:focus{border-color:var(--bp);background:#fff;box-shadow:0 0 0 4px rgba(27,95,232,.1)}
+.fi::placeholder{color:#94a3b8}
+
+.fopts{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;font-size:.9rem}
+.chk{display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--mu)}
+.chk input{width:16px;height:16px;accent-color:var(--bp)}
+.forgot{color:var(--bp);font-weight:600;text-decoration:none}
+.forgot:hover{text-decoration:underline}
+
+.signup-link{text-align:center;margin-top:32px;color:var(--mu);font-size:.95rem}
+.signup-link a{color:var(--bp);font-weight:700;text-decoration:none}
+.signup-link a:hover{text-decoration:underline}
+
+/* TOAST */
+.toast{position:fixed;bottom:30px;right:30px;background:#10b981;color:#fff;padding:16px 24px;border-radius:12px;font-weight:600;display:flex;align-items:center;gap:12px;box-shadow:0 10px 30px rgba(16,185,129,.3);transform:translateY(100px);opacity:0;transition:all 0.5s cubic-bezier(0.4,0,0.2,1);z-index:9999}
+.toast.show{transform:translateY(0);opacity:1}
+
+@media(max-width:992px){
+  .split{flex-direction:column}
+  .s-left{padding:60px 20px;text-align:center}
+  .app-banner{flex-direction:column;text-align:center}
+  .app-btn{margin-left:0;margin-top:10px}
+}
+@media(max-width:768px){
+  .navi{padding:14px 20px}
+  .nlinks{display:none}
+  .hbg{display:flex}
+  .l-title{font-size:2.2rem}
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="navi">
+    <a href="index.html" class="logo"><img src="LOGO.png" alt="InternCircle" width="160" height="48"/></a>
+    <ul class="nlinks">
+      <li><a href="index.html#internships">Internships</a></li>
+      <li><a href="index.html#domains">Domains</a></li>
+      <li><a href="index.html#why-us">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div style="display:flex;gap:10px;align-items:center">
+      <a href="register.html" class="btn btn-p" style="padding:9px 22px;font-size:.85rem">Register Free</a>
+      <button class="hbg" id="hbgBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div class="split">
+  <!-- LEFT SIDE -->
+  <div class="s-left">
+    <div class="l-content">
+      <h1 class="l-title">Welcome Back to <span>InternCircle</span></h1>
+      <p class="l-desc">Login to your dashboard to track your project progress, communicate with mentors, and download your certificates.</p>
+      
+      <!-- INSTALL APP BANNER -->
+      <div class="app-banner" id="installAppBtn">
+        <div class="app-icon">
+          <!-- Mobile icon SVG -->
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+        </div>
+        <div class="app-txt">
+          <h4>Install the InternCircle App</h4>
+          <p>Get instant notifications and access your internship tasks offline.</p>
+        </div>
+        <div class="app-btn">Install Now</div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- RIGHT SIDE -->
+  <div class="s-right">
+    <div class="log-box">
+      <h2>Student Login</h2>
+      <p>Enter your credentials to access your dashboard.</p>
+      
+      <form id="loginForm" onsubmit="event.preventDefault(); showToast();">
+        <div class="fg">
+          <label class="flbl">Email Address</label>
+          <input type="email" class="fi" placeholder="you@example.com" required />
+        </div>
+        <div class="fg">
+          <label class="flbl">Password</label>
+          <input type="password" class="fi" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" required />
+        </div>
+        
+        <div class="fopts">
+          <label class="chk">
+            <input type="checkbox" /> Remember me
+          </label>
+          <a href="#" class="forgot">Forgot Password?</a>
+        </div>
+        
+        <button type="submit" class="btn btn-p btn-full">Login to Dashboard</button>
+      </form>
+      
+      <div class="signup-link">
+        Don't have an account? <a href="register.html">Register for Free</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="appToast">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+  <span>Login successful! Redirecting to dashboard...</span>
+</div>
+
+<div class="toast" id="installToast" style="background:var(--bp); box-shadow:0 10px 30px rgba(27,95,232,.3);">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+  <span>App installation started! Check your browser prompt.</span>
+</div>
+
+<script>
+// Mock Login Toast
+function showToast() {
+  const t = document.getElementById('appToast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Mock Install App Event
+document.getElementById('installAppBtn').addEventListener('click', function() {
+  const t = document.getElementById('installToast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+});
+</script>
+</body>
+</html>

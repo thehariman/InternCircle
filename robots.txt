@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Disallow admin or private paths (if any in future)
+Disallow: /admin/
+Disallow: /dashboard/
+
+# Sitemap location
+Sitemap: https://www.interncircle.in/sitemap.xml
