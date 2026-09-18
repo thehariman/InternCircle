@@ -1,0 +1,79 @@
+# ==============================================================================
+# InternCircle — Official robots.txt
+# Platform: https://www.interncircle.in/
+# Purpose: Guide search engine crawlers and AI indexing bots.
+# ==============================================================================
+
+# Global Rules for All Crawlers
+User-agent: *
+Allow: /
+Allow: /index.html
+Allow: /register.html
+Allow: /contact.html
+Allow: /privacy.html
+Allow: /terms-and-conditions.html
+Allow: /refund-and-return-policy.html
+Allow: /sitemap.xml
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.webp$
+Allow: /*.svg$
+Disallow: /admin.html
+Disallow: /student-panel.html
+Disallow: /login.html
+
+# Googlebot Search & Image Indexing
+User-agent: Googlebot
+Allow: /
+Disallow: /admin.html
+Disallow: /student-panel.html
+Disallow: /login.html
+
+User-agent: Googlebot-Image
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.webp$
+Allow: /*.svg$
+
+# Microsoft Bing
+User-agent: Bingbot
+Allow: /
+Disallow: /admin.html
+Disallow: /student-panel.html
+Disallow: /login.html
+
+# DuckDuckGo
+User-agent: DuckDuckBot
+Allow: /
+Disallow: /admin.html
+Disallow: /student-panel.html
+Disallow: /login.html
+
+# AI Crawlers & Answer Engines (Google AI Overview, OpenAI, Perplexity, Anthropic)
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: FacebookExternalHit
+Allow: /
+
+# XML Sitemap
+Sitemap: https://www.interncircle.in/sitemap.xml
